@@ -1,0 +1,45 @@
+version: "3.5"
+services:
+  web:
+    container_name: "vocab-gym_web"
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile
+    # depends_on:
+      # - db
+    restart: ${RESTART_WEB-always}
+    ports:
+      - "9191:9191"
+      - "9090:9090"
+    volumes:
+      - "./:/var/www/html"
+      - "./docker/apache/default.conf:/etc/apache2/conf-enabled/default.conf"
+      - "./docker/apache/ports.conf:/etc/apache2/ports.conf"
+    networks:
+      default:
+        aliases:
+          - vocab.gym
+
+#   db:
+#     container_name: "vocab-gym_db"
+#     image: docker.io/bitnami/mariadb:10.3-debian-10
+#     restart: ${RESTART_DB-no}
+#     ports: 
+#       - "4006:3006"
+#     environment:
+#       MARIADB_DATABASE: vocab-gym
+#       MARIADB_USER: vocab-gym-user
+#       MARIADB_PASSWORD: 'pass'
+#       MARIADB_ROOT_PASSWORD: 'root'
+#       ALLOW_EMPTY_PASSWORD: 'yes'
+#     volumes:
+#       - "mysql-data:/bitnami/mariadb"
+#       - "./docker/data-dumps/:/docker-entrypoint-initdb.d/"
+
+# volumes:
+#   mysql-data:
+#     name: "vocab-gym_mysql-data"
+
+networks:
+  default:
+    name: "vocab.gym"
