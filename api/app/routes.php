@@ -24,4 +24,12 @@ return function (App $app) {
         $group->get('', ListUsersAction::class);
         $group->get('/{id}', ViewUserAction::class);
     });
+
+    // TODO: POST /attempts - create a new attempt, store question set in the DB, return attempt ID
+
+    // TODO: GET /attempts/ID - fetch question set by the attempt ID
+
+    // TODO: PUT /attempts/ID - submit attempt's answers
+
+    // TODO: GET /attempts/ID/result - return questions, right/wrong answers
 };
