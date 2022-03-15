@@ -18,13 +18,10 @@ import Report from './pages/report';
 function App() {
   return (
     <>
-    {/* <Link to="/">Test</Link> */}
-    {/* <Link to="/result">Result</Link> */}
-    {/* <Link to="/report">Report</Link> */}
     <Routes>      
     <Route path="/" element={ <ChooseTopic/> } />
       <Route path="/test/:testID" element={ <Test/> } />
-      <Route path="/result" element={ <Result/> } />
+      <Route path="/result/:testID" element={ <Result/> } />
       <Route path="/report" element={ <Report/> } />      
     </Routes>
     </>
