@@ -102,10 +102,6 @@ export default function Test() {
         );
     }
 
-    function getCurrentQuestionIndex() {
-        return "QUESTION";
-    }
-
     function submitQuestion( event ) {
         // filter non-Enter keys
         if ( event.key === 'Enter' ) {
