@@ -6,7 +6,6 @@ export default function Test() {
 
     const [ mode, setMode ] = useState( 'demo' ); // will be switched to 'test'
 
-    // TODO: extract back-and-forth method to another file
     const [ currentQuestionIndex, setCurrentQuestionIndex ] = useState( 0 );
     const [ currentApproach, setCurrentApproach ] = useState( 'q2a' );
 
@@ -18,30 +17,13 @@ export default function Test() {
 
     let navigate = useNavigate();
 
+    // Fetch attempt's questions
     useEffect( () => {
-        // TODO: fetch questions / answers instead
-        const fetchedData = { // will be got from the API
-            testType: 'back-and-forth',
-            questions: [
-                {
-                    q: 'abrir',
-                    a: 'to open',
-                    id: 1,
-                },
-                {
-                    q: 'acabar',
-                    a: 'to finish',
-                    id: 2,
-                },
-                {
-                    q: 'aceitar',
-                    a: 'to accept',
-                    id: 3,
-                },
-            ],
-        };
-
-        setData( shuffleQuestions( fetchedData ) );
+        fetch( `http://vocab.gym:9090/attempts/${ params.attemptID }` )
+            .then( res => res.json() )
+            .then( result => { 
+                setData( shuffleQuestions( result ) );
+            } );
     }, [] );
 
     function doDemo() {
@@ -102,6 +84,7 @@ export default function Test() {
         );
     }
 
+    // TODO: extract back-and-forth method to another file
     function submitQuestion( event ) {
         // filter non-Enter keys
         if ( event.key === 'Enter' ) {
@@ -128,9 +111,17 @@ export default function Test() {
                     return;
                 }
 
-                // The last question was answered
-                // TODO: submit the result
-                navigate( `/result/${ params.testID }` );
+                // The last question was answered. Submit the attempt
+                fetch( `http://vocab.gym:9090/attempts/${ params.attemptID }`, { 
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify( currentAttempt )
+                } )
+                    .then( () => {
+                        navigate( `/result/${ params.attemptID }` );
+                    } );
             } else {
                 setCurrentQuestionIndex( currentQuestionIndex + 1 );
             }   

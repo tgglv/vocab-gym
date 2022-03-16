@@ -6,3 +6,20 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.topic {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.topic span {
+  font-style: italic;
+}
+
+.answer_correct::before {
+  content: '✅ ';
+}
+
+.answer_incorrect::before {
+  content: '❌ ';
+}
