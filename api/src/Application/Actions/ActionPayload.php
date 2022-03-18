@@ -48,14 +48,12 @@ class ActionPayload implements JsonSerializable
     #[\ReturnTypeWillChange]
     public function jsonSerialize(): array
     {
-        $payload = [
-            'statusCode' => $this->statusCode,
-        ];
+        $payload = [];
 
         if ($this->data !== null) {
-            $payload['data'] = $this->data;
+            $payload = (array) $this->data;
         } elseif ($this->error !== null) {
-            $payload['error'] = $this->error;
+            $payload = (array) $this->error;
         }
 
         return $payload;
