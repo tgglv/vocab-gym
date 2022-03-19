@@ -14,14 +14,14 @@ class Topic implements JsonSerializable
 
     private string $method;
 
-    private bool $is_completed;
+    private bool $isCompleted;
 
-    public function __construct(?int $id, string $name, string $method, bool $is_completed)
+    public function __construct(?int $id, string $name, string $method, bool $isCompleted)
     {
         $this->id = $id;
         $this->name = $name;
         $this->method = strtolower( $method );
-        $this->is_completed = (bool)$is_completed;
+        $this->isCompleted = (bool)$isCompleted;
     }
 
     public function getId(): ?int
@@ -41,7 +41,7 @@ class Topic implements JsonSerializable
 
     public function getIsCompleted(): bool
     {
-        return $this->is_completed;
+        return $this->isCompleted;
     }
 
     #[\ReturnTypeWillChange]
@@ -51,7 +51,7 @@ class Topic implements JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'method' => $this->method,
-            'is_completed' => $this->is_completed,
+            'is_completed' => $this->isCompleted,
         ];
     }
 }

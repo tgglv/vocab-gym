@@ -21,15 +21,13 @@ class TopicRepository implements TopicRepositoryInterface {
      * @return Topic[]
      */
     public function fetchAll(): array {
-        // TODO: fix inability to ask MySQL via PDO from REST API
-
         $sth = $this->pdo->prepare( 'SELECT * FROM topics' );
         $sth->execute();
 
         $result = [];
         $data = $sth->fetchAll( \PDO::FETCH_NUM );
-        foreach ( $data as [ $id, $name, $method, $is_completed ] ) {
-            $result[] = new Topic( (int) $id, $name, $method, (bool) $is_completed );
+        foreach ( $data as [ $id, $name, $method, $isCompleted ] ) {
+            $result[] = new Topic( (int) $id, $name, $method, (bool) $isCompleted );
         }
 
         return $result;
