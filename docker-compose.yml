@@ -5,8 +5,8 @@ services:
     build: 
       context: .
       dockerfile: docker/Dockerfile
-    # depends_on:
-      # - db
+    depends_on:
+      - db
     restart: ${RESTART_WEB-always}
     ports:
       - "9191:9191"
@@ -16,30 +16,30 @@ services:
       - "./docker/apache/default.conf:/etc/apache2/conf-enabled/default.conf"
       - "./docker/apache/ports.conf:/etc/apache2/ports.conf"
     networks:
-      default:
-        aliases:
-          - vocab.gym
+      - app-tier
 
-#   db:
-#     container_name: "vocab-gym_db"
-#     image: docker.io/bitnami/mariadb:10.3-debian-10
-#     restart: ${RESTART_DB-no}
-#     ports: 
-#       - "4006:3006"
-#     environment:
-#       MARIADB_DATABASE: vocab-gym
-#       MARIADB_USER: vocab-gym-user
-#       MARIADB_PASSWORD: 'pass'
-#       MARIADB_ROOT_PASSWORD: 'root'
-#       ALLOW_EMPTY_PASSWORD: 'yes'
-#     volumes:
-#       - "mysql-data:/bitnami/mariadb"
-#       - "./docker/data-dumps/:/docker-entrypoint-initdb.d/"
+  db:
+    container_name: "vocab-gym_db"
+    image: docker.io/bitnami/mariadb:10.3-debian-10
+    restart: ${RESTART_DB-no}
+    ports: 
+      - "4006:3306"
+    environment:
+      MARIADB_USER: vocab-gym-user
+      MARIADB_PASSWORD: 'pass'
+      MARIADB_ROOT_PASSWORD: 'root'
+      ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - "mysql-data:/bitnami/mariadb"
+      - "./docker/data-dumps/:/docker-entrypoint-initdb.d/"
+    networks:
+      - app-tier
 
-# volumes:
-#   mysql-data:
-#     name: "vocab-gym_mysql-data"
+volumes:
+  mysql-data:
+    name: "vocab-gym_mysql-data"
 
 networks:
-  default:
+  app-tier:
     name: "vocab.gym"
+    driver: bridge

@@ -1,0 +1,1 @@
+insert into topics ( `name`, method ) values ( '100 Verbs for Beginners', 'duplex' );
