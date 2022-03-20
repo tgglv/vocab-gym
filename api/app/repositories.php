@@ -2,16 +2,20 @@
 
 declare(strict_types=1);
 
-use App\Domain\User\UserRepository;
-use App\Domain\Topic\TopicRepositoryInterface;
-use App\Infrastructure\Persistence\User\InMemoryUserRepository;
-use App\Infrastructure\Persistence\Topic\TopicRepository;
 use DI\ContainerBuilder;
+use App\Domain\Attempt\AttemptRepositoryInterface;
+use App\Domain\Question\QuestionRepositoryInterface;
+use App\Domain\Topic\TopicRepositoryInterface;
+use App\Infrastructure\Persistence\Attempt\AttemptRepository;
+use App\Infrastructure\Persistence\Question\QuestionRepository;
+use App\Infrastructure\Persistence\Topic\TopicRepository;
+
+// TODO: add repository Results
 
 return function (ContainerBuilder $containerBuilder) {
-    // Here we map our UserRepository interface to its in memory implementation
     $containerBuilder->addDefinitions([
-        UserRepository::class => \DI\autowire(InMemoryUserRepository::class),
-        TopicRepositoryInterface::class => \DI\autowire(TopicRepository::class),
+        AttemptRepositoryInterface::class  => \DI\autowire( AttemptRepository::class ),
+        QuestionRepositoryInterface::class => \DI\autowire( QuestionRepository::class ),
+        TopicRepositoryInterface::class    => \DI\autowire( TopicRepository::class ),
     ]);
 };
