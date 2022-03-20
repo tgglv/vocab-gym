@@ -28,7 +28,7 @@ export default function ChooseTopic() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify( { topic: selectedTopic * 1 } )
+            body: JSON.stringify( { topicId: selectedTopic * 1 } )
         } )
             .then( res => res.json() )
             .then( result => {
