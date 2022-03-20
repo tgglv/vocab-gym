@@ -39,7 +39,7 @@ class Attempt implements JsonSerializable
         return $this->dateCreated;
     }
 
-    public function getisAnswered(): bool
+    public function isAnswered(): bool
     {
         return $this->isAnswered;
     }

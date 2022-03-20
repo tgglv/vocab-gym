@@ -42,7 +42,9 @@ class CreateAttemptAction extends Action
     }
 
     /**
-     * {@inheritdoc}
+     * Create an attempt REST API method
+     * 
+     * POST /attempts
      */
     protected function action(): Response
     {
