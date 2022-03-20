@@ -5,40 +5,75 @@ declare(strict_types=1);
 namespace App\Application\Actions\Attempt;
 
 use Psr\Http\Message\ResponseInterface as Response;
-use App\Application\Actions\Action;
+use Psr\Log\LoggerInterface;
 use Slim\Routing\RouteContext;
+
+use App\Application\Actions\Action;
+use App\Domain\Attempt\AttemptRepositoryInterface;
+use App\Domain\Question\QuestionRepositoryInterface;
+use App\Domain\Topic\TopicRepositoryInterface;
 
 class GetAttemptAction extends Action
 {
     /**
-     * {@inheritdoc}
+     * @var AttemptRepositoryInterface
+     */
+    private $attemptRepository;
+
+    /**
+     * @var QuestionRepositoryInterface
+     */
+    private $questionRepository;
+
+    /**
+     * @var TopicRepositoryInterface
+     */
+    private $topicRepository;
+
+    public function __construct(
+        LoggerInterface $logger,
+        AttemptRepositoryInterface $attemptRepository,
+        QuestionRepositoryInterface $questionRepository,
+        TopicRepositoryInterface $topicRepository
+    ) {
+        parent::__construct( $logger );
+        $this->attemptRepository  = $attemptRepository;
+        $this->questionRepository = $questionRepository;
+        $this->topicRepository    = $topicRepository;
+    }
+
+    /**
+     * Get attempt related data
+     * 
+     * GET /attempts/:id
      */
     protected function action(): Response
     {
         $routeContext = RouteContext::fromRequest($this->request);
         $route        = $routeContext->getRoute();
-        $id           = $route->getArgument('id');
+        $attemptId    = $route->getArgument('id');
 
-        // TODO: get relevant data from the DB
+        $attempt = $this->attemptRepository->getAttempt( (int) $attemptId );
+        if ( null === $attempt ) {
+            // An attempt is not found
+            return $this->respondWithData( ['error' => 'An attempt is not found'], 404 );
+        }
+
+        $topic = $this->topicRepository->fetchById( $attempt->getTopicId() );
+
+        $attemptAnswers = $this->attemptRepository->getAttemptAnswers( $attempt );
+
+        $questions = [];
+        foreach ( $attemptAnswers as $answer ) {
+            $questions[] = [
+                'q'  => $answer->getQuestion(),
+                'a'  => $answer->getCorrectAnswer(),
+                'id' => $answer->getQuestionId(),
+            ];
+        }
         $data = [
-            'testType'  => 'back-and-forth',
-            'questions' => [
-                [
-                    'q'  => 'abrir',
-                    'a'  => 'to open',
-                    'id' => 1,
-                ],
-                [
-                    'q'  => 'acabar',
-                    'a'  => 'to finish',
-                    'id' => 2,
-                ],
-                [
-                    'q'  => 'aceitar',
-                    'a'  => 'to accept',
-                    'id' => 3,
-                ],
-            ],
+            'testType'  => $topic->getMethod(),
+            'questions' => $questions,
         ];
 
         return $this->respondWithData( $data, 200 );

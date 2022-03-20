@@ -21,4 +21,22 @@ interface AttemptRepositoryInterface {
      * @param int[]   $questionIDs List of question IDs to be filled
      */
     public function fillAttemptWithQuestions( Attempt $attempt, array $questionIDs );
+
+    /**
+     * Fetch an attempt from the DB
+     * 
+     * @param int $attemptId
+     * 
+     * @return Attempt
+     */
+    public function getAttempt( int $attemptId ): ?Attempt;
+
+    /**
+     * Get attempt answers
+     * 
+     * @param Attempt $attempt Attempt
+     * 
+     * @return null|AttemptAnswer[] Attempt answers
+     */
+    public function getAttemptAnswers( Attempt $attempt ): ?array;
 }

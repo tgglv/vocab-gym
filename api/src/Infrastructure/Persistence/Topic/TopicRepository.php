@@ -44,18 +44,18 @@ class TopicRepository extends BaseRepository implements TopicRepositoryInterface
         $sth = $this->pdo->prepare( 'SELECT * FROM topics WHERE id = :topicId' );
         $sth->execute( [ 'topicId' => $topicId ] );
 
-        $result = [];
-        $data = $sth->fetchAll( \PDO::FETCH_NUM );
-        foreach ( $data as [ $id, $name, $method, $isCompleted, $questionsPerAttempt ] ) {
-            return new Topic(
-                (int) $id, 
-                $name, 
-                $method, 
-                (bool) $isCompleted, 
-                (int) $questionsPerAttempt
-            );
+        $data = $sth->fetch( \PDO::FETCH_NUM );
+        if ( false === $data ) {
+            return null;
         }
 
-        return null;
+        list( $id, $name, $method, $isCompleted, $questionsPerAttempt ) = $data;
+        return new Topic(
+            (int) $id, 
+            $name, 
+            $method, 
+            (bool) $isCompleted, 
+            (int) $questionsPerAttempt
+        );
     }
 }

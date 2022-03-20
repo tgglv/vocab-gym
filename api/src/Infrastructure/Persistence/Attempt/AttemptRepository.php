@@ -6,6 +6,7 @@ namespace App\Infrastructure\Persistence\Attempt;
 
 use App\Infrastructure\Persistence\BaseRepository;
 use App\Domain\Attempt\Attempt;
+use App\Domain\Attempt\AttemptAnswer;
 use App\Domain\Attempt\AttemptRepositoryInterface;
 
 class AttemptRepository extends BaseRepository implements AttemptRepositoryInterface {
@@ -40,8 +41,9 @@ class AttemptRepository extends BaseRepository implements AttemptRepositoryInter
         $stmt->execute(); 
 
         $attemptData = $stmt->fetch( \PDO::FETCH_NUM );
-
-        // TODO: Handle the case when an attempt is not found
+        if ( false === $attemptData ) {
+            return null;
+        }
 
         list( $id, $topicId, $dateCreated, $isAnswered ) = $attemptData;
         return new Attempt(
@@ -70,5 +72,43 @@ class AttemptRepository extends BaseRepository implements AttemptRepositoryInter
                 )
             );
         $this->pdo->query( $sql );
+    }
+
+    /**
+     * Get attempt answers
+     * 
+     * @param Attempt $attempt Attempt
+     * 
+     * @return null|AttemptAnswer[] Attempt answers
+     */
+    public function getAttemptAnswers( Attempt $attempt ): ?array {
+        $stmt = $this->pdo->prepare(
+            'SELECT aa.question_id, q.content, q.correct_answer, aa.answer, aa.is_correct 
+            FROM attempt_answers aa
+            INNER JOIN questions q ON q.id = aa.question_id
+            WHERE attempt_id = :attemptId'
+        );
+
+        // bindParam uses passing by reference
+        $attemptId = $attempt->getId();
+        $stmt->bindParam( ':attemptId', $attemptId, \PDO::PARAM_INT );
+        $stmt->execute();
+
+        $result  = [];
+        $answers = $stmt->fetchAll( \PDO::FETCH_NUM );
+        if ( count( $answers ) ) {
+            foreach( $answers as [ $questionId, $question, $correctAnswer, $answer, $isCorrect ] ) {
+                $result[] = new AttemptAnswer( 
+                    (int) $attemptId, 
+                    (int) $questionId, 
+                    $question, 
+                    $correctAnswer, 
+                    $answer, 
+                    (bool) $isCorrect
+                );
+            }
+        }
+
+        return $result;
     }
 }
