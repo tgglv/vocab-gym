@@ -130,7 +130,7 @@ export default function Test() {
 
     return (
         <>
-            <h1>Test #{ params.testID }</h1>
+            <h1>Test #{ params.attemptID }</h1>
             { 'demo' === mode && doDemo() }
             { 'test' === mode && doTest() }
         </>

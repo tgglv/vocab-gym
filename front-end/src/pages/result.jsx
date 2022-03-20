@@ -43,7 +43,7 @@ export default function Result() {
 
     return (
         <>
-            <h1>Results for test #{ params.testID }</h1>
+            <h1>Results for test #{ params.attemptID }</h1>
             { result && showResult() }
             <button onClick={ () => navigate( '/' ) }>Continue</button>
         </>
