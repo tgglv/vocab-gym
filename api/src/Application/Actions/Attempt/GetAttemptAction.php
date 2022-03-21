@@ -53,7 +53,7 @@ class GetAttemptAction extends Action
         $route        = $routeContext->getRoute();
         $attemptId    = $route->getArgument('id');
 
-        $attempt = $this->attemptRepository->getAttempt( (int) $attemptId );
+        $attempt = $this->attemptRepository->fetchById( (int) $attemptId );
         if ( null === $attempt ) {
             // An attempt is not found
             return $this->respondWithData( ['error' => 'An attempt is not found'], 404 );

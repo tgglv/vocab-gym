@@ -23,7 +23,7 @@ class AttemptRepository extends BaseRepository implements AttemptRepositoryInter
         $stmt->execute(); 
 
         $attemptId = $this->pdo->lastInsertId();
-        return $this->getAttempt( (int) $attemptId );
+        return $this->fetchById( (int) $attemptId );
     }
 
     /**
@@ -33,7 +33,7 @@ class AttemptRepository extends BaseRepository implements AttemptRepositoryInter
      * 
      * @return Attempt
      */
-    public function getAttempt( int $attemptId ): ?Attempt {
+    public function fetchById( int $attemptId ): ?Attempt {
         $stmt = $this->pdo->prepare( 
             'SELECT id, topic_id, date_created, is_answered FROM attempts WHERE id = :id'
         );

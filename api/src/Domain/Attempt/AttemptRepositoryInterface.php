@@ -29,7 +29,7 @@ interface AttemptRepositoryInterface {
      * 
      * @return Attempt
      */
-    public function getAttempt( int $attemptId ): ?Attempt;
+    public function fetchById( int $attemptId ): ?Attempt;
 
     /**
      * Get attempt answers

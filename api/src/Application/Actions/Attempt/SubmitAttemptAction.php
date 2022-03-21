@@ -55,7 +55,7 @@ class SubmitAttemptAction extends Action
         $route        = $routeContext->getRoute();
         $attemptId    = $route->getArgument('id');
 
-        $attempt = $this->attemptRepository->getAttempt( (int) $attemptId );
+        $attempt = $this->attemptRepository->fetchById( (int) $attemptId );
         if ( false === $attempt ) {
             return $this->respondWithData( [ 'error' => 'Attempt not found' ], 404 );
         }
