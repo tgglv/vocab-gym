@@ -111,4 +111,29 @@ class AttemptRepository extends BaseRepository implements AttemptRepositoryInter
 
         return $result;
     }
+
+    /**
+     * Submit answers to an attempt
+     * 
+     * @param AttemptAnswer[] $answers Attempt answers
+     * 
+     * @return void
+     */
+    public function applyAnswers( array $answers ) {
+        $values = [];
+        foreach( $answers as $a ) {
+            // TODO: Protect from SQL injection for the answer
+            $values[] = sprintf(
+                '(%d, %d, \'%s\', %d)',
+                (int) $a->getAttemptId(),
+                (int) $a->getQuestionId(),
+                addslashes( $a->getAnswer() ),
+                (int) $a->isCorrect(),
+            );
+        }
+        $values = implode( ', ', $values );
+        $sql = "INSERT INTO attempt_answers ( attempt_id, question_id, answer, is_correct ) VALUES
+            {$values} ON DUPLICATE KEY UPDATE answer=VALUES(answer), is_correct=VALUES(is_correct)";
+        $this->pdo->query( $sql );
+    }
 }

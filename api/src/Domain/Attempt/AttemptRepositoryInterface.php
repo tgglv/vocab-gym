@@ -39,4 +39,13 @@ interface AttemptRepositoryInterface {
      * @return null|AttemptAnswer[] Attempt answers
      */
     public function getAttemptAnswers( Attempt $attempt ): ?array;
+
+    /**
+     * Submit answers to an attempt
+     * 
+     * @param AttemptAnswer[] $answers Attempt answers
+     * 
+     * @return void
+     */
+    public function applyAnswers( array $answers );
 }

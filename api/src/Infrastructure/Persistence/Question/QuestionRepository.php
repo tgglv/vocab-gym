@@ -47,4 +47,37 @@ class QuestionRepository extends BaseRepository implements QuestionRepositoryInt
             )
         );
     }
+
+    /**
+     * Fetch a question by ID
+     * 
+     * @param int $questionId Question ID
+     * 
+     * @return ?Question
+     */
+    public function fetchById( int $questionId ): ?Question {
+        $stmt = $this->pdo->prepare(
+            'SELECT id, topic_id, content, correct_answer, is_learned 
+            FROM questions 
+            WHERE id = :id'
+        );
+
+        $stmt->bindParam( ':id', $questionId, \PDO::PARAM_INT );
+        $stmt->execute(); 
+
+        $result = [];
+        $data = $stmt->fetch( \PDO::FETCH_NUM );
+        if ( false === $data ) {
+            return null;
+        }
+
+        list( $id, $topicId, $content, $correctAnswer, $isLearned ) = $data;
+        return new Question(
+            (int) $id,
+            (int) $topicId,
+            $content,
+            $correctAnswer,
+            (bool) $isLearned
+        );
+    }
 }
