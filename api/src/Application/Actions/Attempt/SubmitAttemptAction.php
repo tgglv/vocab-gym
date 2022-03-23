@@ -75,6 +75,8 @@ class SubmitAttemptAction extends Action
         $answers = $this->parseDuplexToAnswers( (int) $attemptId, $body );
         $this->attemptRepository->applyAnswers( $answers );
 
+        // TODO: Mark questions as learned if they have N correct answers in a row
+
         return $this->respondWithData( null, 204 );
     }
 
